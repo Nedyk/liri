@@ -1,0 +1,3 @@
+Spotify client id = ad549bd800b342cb9485af9a9f31c437
+
+Spotify Client secret = 78ef665c6b9b426fb9cf173472d79a5e
