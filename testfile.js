@@ -3,6 +3,7 @@ var config = require("dotenv").config();
 //packages- twitter and spotify
 var twit = require('twitter');
 var spotifyapi = require('node-spotify-api');
+var fs = require('fs');
 //require keys
 //console.log(config); 
  var keys = require("./keys")
@@ -12,9 +13,11 @@ var client = new twit(keys.twitter);
 //console.log(client)
 var spotify = new spotifyapi(keys.spotify);
  //console.log(spotify);
+ var action = process.argv[2];
+var value = process.argv[3];
 
   //liri.js should be able to take in one of the following commands
-  var action = process.argv[2];
+  
   switch (action) {
   case "my-tweets":
     tweets();
@@ -44,20 +47,20 @@ function tweets(){
 twit;
 client.get('favorites/list', function(error, tweets, response) {
 	var twitterUsername = process.argv[3];
-		if(!twitterUsername){
-			twitterUsername = "neddyk22";
+		if(!value){
+			value = "neddyk22";
 		}
-		params = {screen_name: twitterUsername};
+		params = {screen_name: value};
 		client.get("statuses/user_timeline/", params, function(error, data, response){
 			if (!error) {
 				for(var i = 0; i < data.length; i++) {
 					//console.log(response); // Show the full response in the terminal
-					console.log(data);
+					//console.log(JSON.stringify(data, undefined, 2));
 					var twitterResults = 
 					"@" + data[i].user.screen_name + ": " + 
 					data[i].text + "\r\n" + 
 					data[i].created_at + "\r\n" ;
-					console.log(twitterResults);
+					console.log(JSON.stringify(twitterResults, undefined, 2));
 					
 				}
 			}  else {
@@ -91,14 +94,14 @@ client.get('favorites/list', function(error, tweets, response) {
 			//The album that the song is from
 //If no song is provided then your program will default to "The Sign" by Ace of Base
 function spotified(){
-	var song = process.argv[3];
-		if(!song){
-			song = "The Sign";
+	
+		if(!value){
+			value = "The Sign";
 		}
 		
-		spotify.search({ type: "track", query: song}, function(err, data) {
+		spotify.search({ type: "track", query: value}, function(err, data) {
 			if(!err){
-				console.log(data);
+				//console.log(JSON.stringify(data, undefined, 2));
 
 				var songData = data.tracks.items;
 				for (var i = 0; i < 1; i++) {
@@ -147,14 +150,14 @@ function movies(){
 var request = require("request");
 
 //variables
-var movieName = "";
+var value = "";
 var movie =[];
 //store from command line
-movieName = process.argv[3];
+value = process.argv[3];
 
 //API
 
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+var queryUrl = "http://www.omdbapi.com/?t=" + value + "&y=&plot=short&apikey=trilogy";
 
 request(queryUrl, function(err, response, body) {
 //if no error and status code is 200
@@ -162,13 +165,14 @@ request(queryUrl, function(err, response, body) {
   		if(!movie){
 			movie = "mr nobody";
 		}
+		
 	//var movieObject = console.log(JSON.parse(body));
+	//console.log(JSON.stringify(body, undefined, 2));
 	var year = JSON.parse(body).Year.split(",");
-	console.log(year); 
 	movie.push("Year produced " + ": " + year);
 	var rating = JSON.parse(body).imdbRating.split(" ,");
 			movie.push("imdbRating " + ": " + rating);
-		//var rotten = JSON.parse(body).Rotten_Tomatoes.split(",");
+		//var rotten = JSON.parse(body).RottenTomatoes.split(",");
 			//movie.push(rotten);
 		var country = JSON.parse(body).Country.split(",");
 			movie.push("Country " + ": " + country);
@@ -187,21 +191,21 @@ request(queryUrl, function(err, response, body) {
 
 
 
-// 		var movieObject = JSON.parse(body);
-// 				//console.log(movieObject); // Show the text in the terminal
-// 				var movieResults =
-// 				"------------------------------ begin ------------------------------" + "\r\n"
-// 				"Title: " + movieObject.Title+"\r\n"+
-// 				"Year: " + movieObject.Year+"\r\n"+
-// 				"Imdb Rating: " + movieObject.imdbRating+"\r\n"+
-// 				"Country: " + movieObject.Country+"\r\n"+
-// 				"Language: " + movieObject.Language+"\r\n"+
-// 				"Plot: " + movieObject.Plot+"\r\n"+
-// 				"Actors: " + movieObject.Actors+"\r\n"+
-// 				"Rotten Tomatoes Rating: " + movieObject.tomatoRating+"\r\n"+
-// 				"Rotten Tomatoes URL: " + movieObject.tomatoURL + "\r\n" + 
-// 				"------------------------------ fin ------------------------------" + "\r\n";
-// 				console.log(movieResults);
+		// var movieObject = JSON.parse(body);
+		// 		//console.log(movieObject); // Show the text in the terminal
+		// 		var movieResults =
+		// 		"------------------------------ begin ------------------------------" + "\r\n"
+		// 		"Title: " + movieObject.Title+"\r\n"+
+		// 		"Year: " + movieObject.Year+"\r\n"+
+		// 		"Imdb Rating: " + movieObject.imdbRating+"\r\n"+
+		// 		"Country: " + movieObject.Country+"\r\n"+
+		// 		"Language: " + movieObject.Language+"\r\n"+
+		// 		"Plot: " + movieObject.Plot+"\r\n"+
+		// 		"Actors: " + movieObject.Actors+"\r\n"+
+		// 		"Rotten Tomatoes Rating: " + movieObject.tomatoRating+"\r\n"+
+		// 		"Rotten Tomatoes URL: " + movieObject.tomatoURL + "\r\n" + 
+		// 		"------------------------------ fin ------------------------------" + "\r\n";
+		// 		console.log(movieResults);
 // 				log(movieResults); // calling log function
 // 			} else {
 // 				console.log("Error :"+ error);
@@ -229,10 +233,17 @@ request(queryUrl, function(err, response, body) {
 
 //  
 
-function saysIt(logForAudit) {
-	  fs.appendFile("audit.txt", logForAudit, (err) => {
-	    if(err) {
-	      console.log('error');
-	    }
-	  });
+function saysIt() {
+	 fs.readFile('random.txt', 'utf8', function(error, data) {
+        if (error) {
+            console.log(error);
+        } else {
+
+            console.log(JSON.stringify(data, undefined, 2));
+            var g = data.split(','); 
+            console.log(g);
+          spotified(g[0]);
+           
+        }
+    });
 	}
