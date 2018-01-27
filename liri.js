@@ -75,10 +75,7 @@ client.get('favorites/list', function(error, tweets, response) {
   }
   
 
-  //console.log(tweets);
-  //var fave = JSON.parse(body).description.split(" , ");
-
-  //console.log(fave);  // Raw response object. 
+  
 });
 
 });
@@ -121,25 +118,9 @@ function spotified(){
         return;
       }
     });
-//  var artist = process.argv[3]; 
-//  if(!artist){
-//    artist ="Beyonce"
-//  }
-//  var sportUrl = "https://api.spotify.com/v1/search?q=name:' + artist + '%20artist:' + artist + '&type=track&limit=10"
-//   spotify.search(sportUrl, function(err, data){
-//    if(!err){
-//      console.log(data); 
-//    }
-// }); 
+
 
 }
-  
-  
- 
- 
-
-
-
   
 
 function movies(){
@@ -166,8 +147,6 @@ request(queryUrl, function(err, response, body) {
       movie = "mr nobody";
     }
     
-  //var movieObject = console.log(JSON.parse(body));
-  //console.log(JSON.stringify(body, undefined, 2));
   var year = JSON.parse(body).Year.split(",");
   movie.push("Year produced " + ": " + year);
   var rating = JSON.parse(body).imdbRating.split(" ,");
@@ -189,50 +168,6 @@ request(queryUrl, function(err, response, body) {
 }
 
 
-
-
-    // var movieObject = JSON.parse(body);
-    //    //console.log(movieObject); // Show the text in the terminal
-    //    var movieResults =
-    //    "------------------------------ begin ------------------------------" + "\r\n"
-    //    "Title: " + movieObject.Title+"\r\n"+
-    //    "Year: " + movieObject.Year+"\r\n"+
-    //    "Imdb Rating: " + movieObject.imdbRating+"\r\n"+
-    //    "Country: " + movieObject.Country+"\r\n"+
-    //    "Language: " + movieObject.Language+"\r\n"+
-    //    "Plot: " + movieObject.Plot+"\r\n"+
-    //    "Actors: " + movieObject.Actors+"\r\n"+
-    //    "Rotten Tomatoes Rating: " + movieObject.tomatoRating+"\r\n"+
-    //    "Rotten Tomatoes URL: " + movieObject.tomatoURL + "\r\n" + 
-    //    "------------------------------ fin ------------------------------" + "\r\n";
-    //    console.log(movieResults);
-//        log(movieResults); // calling log function
-//      } else {
-//        console.log("Error :"+ error);
-//        return;
-//      }
-// //     //grab specific fields from the body and push them to movie array 
-// //       var year = JSON.parse(body).Year.split(",");
-// //       movie.push("Year produced " + ": " + year);
-  //    var rating = JSON.parse(body).imdbRating.split(" ,");
-    //  movie.push("imdbRating " + ": " + rating);
-    // //var rotten = JSON.parse(body).RottenTomatoes.split(",");
-    //  //movie.push(rotten);
-    // var country = JSON.parse(body).Country.split(",");
-    //  movie.push("Country " + ": " + country);
-    // var language = JSON.parse(body).Language.split(",");
-    //  movie.push("Language used in movie " + ":" + language);
-    // var plot = JSON.parse(body).Plot.split(",");
-    //  movie.push("Plot " + ": " + plot);
-    // var actors = JSON.parse(body).Actors.split(",");
-    //  movie.push("Actors " + ": " + actors);
-
-// // for(var i = 0; i < movie.length; i++){
-// //   console.log(movie[i])
-// });
-
-//  
-
 function saysIt() {
    fs.readFile('random.txt', 'utf8', function(error, data) {
         if (error) {
@@ -247,3 +182,15 @@ function saysIt() {
         }
     });
   }
+
+
+function auditTrack() {     // captures all command line inputs     
+ var valueinputs = process.argv.slice(2).join(" ");          
+ fs.appendFile("log.txt", "node liri.js: " + valueinputs + "\n", function (error) {  
+  if (error) {        
+   throw error;       
+             }      
+  else {          
+   console.log(" updated log file! ");       
+       }  
+ });     return true; 
