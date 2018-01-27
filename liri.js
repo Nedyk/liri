@@ -182,3 +182,15 @@ function saysIt() {
         }
     });
   }
+
+
+function auditTrack() {     // captures all command line inputs     
+ var valueinputs = process.argv.slice(2).join(" ");          
+ fs.appendFile("log.txt", "node liri.js: " + valueinputs + "\n", function (error) {  
+  if (error) {        
+   throw error;       
+             }      
+  else {          
+   console.log(" updated log file! ");       
+       }  
+ });     return true; 
